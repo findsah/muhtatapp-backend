@@ -1,0 +1,1 @@
+web: gunicorn Muhtatapp.wsgi --log-file -
