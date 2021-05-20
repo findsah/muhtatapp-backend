@@ -104,7 +104,7 @@ class CustomAuthToken(ObtainAuthToken):
                 # 'first_name': user.first_name,
                 # 'last_name': user.last_name,
                 'name': user.name,
-                'captain': user.captain,
+                'driver': user.driver,
                 'cash': user.cash,
             }, status=status.HTTP_200_OK)
         else:

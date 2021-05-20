@@ -60,7 +60,7 @@ class SuperUser(AbstractBaseUser, PermissionsMixin):
     # qr_code = models.ImageField(upload_to='', blank=True, null=True)
     cash = models.IntegerField(default=100, null=True, blank=True)
     # b_qr_code = models.ImageField(upload_to='buses_qr', blank=True, null=True)
-    captain = models.BooleanField(default=False)
+    driver = models.BooleanField(default=False)
 
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)

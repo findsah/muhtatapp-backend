@@ -20,7 +20,7 @@ class CourseAdmin(admin.ModelAdmin):
 
 @admin.register(Seats)
 class CourseAdmin(admin.ModelAdmin):
-    list_display = ['id']
+    list_display = ['seat_number', 'passenger']
 
     class Meta:
         model = Seats
