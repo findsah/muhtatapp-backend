@@ -13,7 +13,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from bus.serializers import BusSerializer, stationSerializer
-from bus.models import Buses, Busstation, Seats
+from bus.models import Buses, Busstation, Seats, Tracking
 import qrcode
 from io import BytesIO
 from django.core.files import File
@@ -156,3 +156,21 @@ def occupied(request, id):
 
     # print(not_occupied)
     return Response({'Occupied_Seats': occupied, 'Not_Occupied_Seats': not_occupied}, status=status.HTTP_200_OK)
+
+
+@csrf_exempt
+@permission_classes([AllowAny])
+@api_view(['POST'], )
+def tracking(request):
+    long = request.data.get('longitude')
+    lat = request.data.get('latitude')
+    time = request.data.get('timestamp')
+
+    track_obj = Tracking.objects.get(id=2)
+
+    track_obj.long = long
+    track_obj.lat = lat
+    track_obj.timestamp = time
+    track_obj.save()
+
+    return Response({'longitude': long, 'latitude': lat, 'timestamp': time})

@@ -1,5 +1,6 @@
 from django.db import models
 from users.models import SuperUser
+from django.utils.translation import ugettext_lazy as _
 
 
 # Create your models here.
@@ -11,6 +12,10 @@ class Busstation(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = "Bus Station"
+        verbose_name_plural = "Bus Stations"
 
 
 class Buses(models.Model):
@@ -25,9 +30,13 @@ class Buses(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = "Bus"
+        verbose_name_plural = "Buses"
+
 
 class Seats(models.Model):
-    seat_number = models.IntegerField()
+    seat_number = models.IntegerField(_("Ticket Number"))
     passenger = models.ForeignKey(SuperUser, on_delete=models.CASCADE, related_name='seats')
     bus = models.ManyToManyField(Buses, related_name='seat')
     qr_code = models.ImageField(upload_to='buses_qr')
@@ -35,3 +44,13 @@ class Seats(models.Model):
     def delete(self, *args, **kwargs):
         self.qr_code.delete()
         super().delete(*args, **kwargs)
+
+    class Meta:
+        verbose_name = "Ticket"
+        verbose_name_plural = "Tickets"
+
+
+class Tracking(models.Model):
+    long = models.DecimalField(decimal_places=6, max_digits=9)
+    lat = models.DecimalField(decimal_places=6, max_digits=9)
+    timestamp = models.IntegerField()

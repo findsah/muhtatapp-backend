@@ -1,7 +1,7 @@
 from django.urls import path
 from bus.views import (
     customer_get_stations,
-    customer_get_buses, booking, cancel_booking, qr_api, occupied
+    customer_get_buses, booking, cancel_booking, qr_api, occupied, tracking
 )
 
 app_name = 'bus'
@@ -16,4 +16,5 @@ urlpatterns = [
     path('qr/<int:id>/', qr_api),
     # path('oauth/login/', SocialLoginView.as_view())  # Fb login auth
     path('occupied/<int:id>/', occupied),
+    path('tracking/', tracking)
 ]

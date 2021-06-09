@@ -1,5 +1,5 @@
 from django.contrib import admin
-from bus.models import Busstation, Buses, Seats
+from bus.models import Busstation, Buses, Seats, Tracking
 
 
 @admin.register(Busstation)
@@ -24,3 +24,11 @@ class CourseAdmin(admin.ModelAdmin):
 
     class Meta:
         model = Seats
+
+
+@admin.register(Tracking)
+class CourseAdmin(admin.ModelAdmin):
+    list_display = ['id', 'long', 'lat', 'timestamp']
+
+    class Meta:
+        model = Tracking
