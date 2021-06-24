@@ -51,6 +51,20 @@ class Seats(models.Model):
 
 
 class Tracking(models.Model):
-    long = models.DecimalField(decimal_places=6, max_digits=9)
-    lat = models.DecimalField(decimal_places=6, max_digits=9)
-    timestamp = models.IntegerField()
+    long = models.CharField(max_length=300)
+    lat = models.CharField(max_length=300)
+    timestamp = models.CharField(max_length=300)
+    bus = models.ForeignKey(Buses, on_delete=models.CASCADE, default=1)
+
+
+class Camera(models.Model):
+    bus = models.ForeignKey(Buses, on_delete=models.CASCADE)
+    time = models.CharField(max_length=300)
+    filename = models.CharField(max_length=500)
+
+
+class P_Sensor(models.Model):
+    bus = models.ForeignKey(Buses, on_delete=models.CASCADE)
+    pass_count = models.IntegerField()
+    date_time = models.CharField(max_length=400)
+

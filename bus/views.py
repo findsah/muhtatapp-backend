@@ -12,8 +12,8 @@ from users.models import SuperUser
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from bus.serializers import BusSerializer, stationSerializer
-from bus.models import Buses, Busstation, Seats, Tracking
+from bus.serializers import BusSerializer, stationSerializer, TrackingSerializer
+from bus.models import Buses, Busstation, Seats, Tracking, Camera, P_Sensor
 import qrcode
 from io import BytesIO
 from django.core.files import File
@@ -165,12 +165,52 @@ def tracking(request):
     long = request.data.get('longitude')
     lat = request.data.get('latitude')
     time = request.data.get('timestamp')
+    bus_id = request.data.get('bus_id')
 
-    track_obj = Tracking.objects.get(id=2)
+    num = Tracking.objects.filter(bus_id=bus_id).count()
 
-    track_obj.long = long
-    track_obj.lat = lat
-    track_obj.timestamp = time
-    track_obj.save()
+    if num != 0:
+        track_obj = Tracking.objects.get(bus_id=bus_id)
+        track_obj.long = long
+        track_obj.lat = lat
+        track_obj.timestamp = time
+        track_obj.save()
+    else:
+        Tracking.objects.create(bus_id=bus_id, long=long, lat=lat, timestamp=time)
 
-    return Response({'longitude': long, 'latitude': lat, 'timestamp': time})
+    return Response({'longitude': long, 'latitude': lat, 'timestamp': time, 'bus': bus_id})
+
+
+@csrf_exempt
+@permission_classes([AllowAny])
+@api_view(['POST'], )
+def camera(request):
+    bus_id = request.data.get('bus_id')
+    time = request.data.get('time')
+    file = request.data.get('file')
+    Camera.objects.create(bus_id=bus_id, time=time, filename=file)
+    return Response(status=status.HTTP_200_OK)
+
+
+@csrf_exempt
+@permission_classes([AllowAny])
+@api_view(['POST'], )
+def sensor(request):
+    bus_id = request.data.get('bus_id')
+    pass_count = request.data.get('pass_count')
+    date_time = request.data.get('date_time')
+    P_Sensor.objects.create(bus_id=bus_id, pass_count=pass_count, date_time=date_time)
+    return Response(status=status.HTTP_200_OK)
+
+
+@csrf_exempt
+@permission_classes([AllowAny])
+@api_view(['GET'], )
+def tracking_get(request, id):
+    if Tracking.objects.filter(bus_id=id).count() != 0:
+        t = Tracking.objects.get(bus_id=id)
+        s = TrackingSerializer(t)
+
+        return Response(s.data, status=status.HTTP_200_OK)
+    else:
+        return Response({'status': 'No such Bus'}, status=status.HTTP_404_NOT_FOUND)
